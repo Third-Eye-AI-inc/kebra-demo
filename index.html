@@ -63,6 +63,7 @@
     .phone-size{max-height:72vh}
     @supports (height:100svh){.phone-size{max-height:72svh}}
     .spacer{display:block;order:2}
+    .annos{order:2}
     .dots{padding-top:88px}
   }
 
@@ -76,7 +77,37 @@
   @media(min-width:900px){.cap2 h2{font-size:24px}}
 
   /* ---------- phone ---------- */
-  .phone{position:relative;aspect-ratio:9/19.3;height:100%;width:auto;margin:0 auto;user-select:none}
+  .phone-slot{position:relative}
+  .phone-slot::before{content:"";position:absolute;left:50%;top:50%;width:560px;height:560px;transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(254,106,26,.10) 0%,rgba(254,106,26,.035) 42%,transparent 68%);pointer-events:none}
+  .phone-size{perspective:1500px;animation:pfloat 6.5s ease-in-out infinite}
+  @keyframes pfloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .phone{position:relative;aspect-ratio:9/19.3;height:100%;width:auto;margin:0 auto;user-select:none;
+    --ry:-13deg;--rz:2.4deg;transform:rotateY(var(--ry)) rotateX(2.5deg) rotateZ(var(--rz));
+    transform-style:preserve-3d;transition:transform 1s cubic-bezier(.4,0,.2,1)}
+  .hand{position:absolute;left:-10%;bottom:-9%;width:120%;height:auto;z-index:40;pointer-events:none}
+  .hand .hfill{fill:#211f1d;stroke:rgba(255,255,253,.11);stroke-width:1.2}
+  .pshadow{position:absolute;left:50%;bottom:-26px;width:70%;height:26px;transform:translateX(-46%) rotate(2deg);
+    background:radial-gradient(ellipse at center,rgba(0,0,0,.55) 0%,transparent 70%);filter:blur(6px);pointer-events:none}
+  .annos{position:relative;height:100%;display:none}
+  @media(min-width:768px){.annos{display:block}}
+  .anno{position:absolute;left:0;width:100%;max-width:270px;opacity:0;transform:translateY(8px);transition:opacity .5s,transform .5s;pointer-events:none}
+  .anno.on{opacity:1;transform:none}
+  .anno svg{display:block;width:110px;height:56px;margin-bottom:2px}
+  .anno .apath{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-dasharray:220;stroke-dashoffset:220}
+  .anno.on .apath{animation:adraw .9s ease .15s forwards}
+  .anno .ahead{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:0}
+  .anno.on .ahead{animation:ashow .01s linear .95s forwards}
+  @keyframes adraw{to{stroke-dashoffset:0}}
+  @keyframes ashow{to{opacity:1}}
+  .anno span{display:block;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;line-height:1.6;color:var(--accent)}
+  .anno0{top:16%}.anno1{top:34%}.anno2{top:44%}.anno3{top:52%}.anno4{top:20%}.anno5{top:62%}
+  .anno2wrap{position:absolute;right:0;top:-84px;z-index:5;display:none}
+  @media(min-width:900px){.anno2wrap{display:block}}
+  .anno2wrap .anno{position:static;max-width:340px;text-align:right}
+  .anno2wrap .anno svg{margin:0 0 0 auto}
+  
   .shell{position:absolute;inset:0;border-radius:52px;background:#0b0b0b;
          box-shadow:0 30px 80px -20px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,253,.12)}
   .screen{position:absolute;inset:10px;border-radius:43px;overflow:hidden;background:var(--phbg)}
@@ -292,7 +323,7 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
   .approved{position:absolute;top:14px;right:16px;z-index:25;border-radius:6px;border:1.5px solid var(--accent);color:var(--accent);
             padding:4px 8px;font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;transform:rotate(3deg);background:rgba(255,255,253,.85)}
-  .bsplash{position:absolute;inset:0;z-index:28;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  .bsplash{position:absolute;inset:0;z-index:34;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
            background:rgba(17,16,16,.94);color:var(--chalk);padding:20px;opacity:0;pointer-events:none;transition:opacity .5s}
   .bsplash.on{opacity:1}
   .bsplash .bs-fig{font-size:44px;font-weight:700;letter-spacing:-.03em;line-height:1;transform:translateY(10px) scale(.95);transition:transform .6s}
@@ -389,6 +420,11 @@
   .b-line{border:1px solid rgba(255,255,253,.25)} .b-line:hover{border-color:rgba(255,255,253,.6)}
   .prov{margin:48px auto 0;max-width:640px;font-size:11.5px;line-height:1.6;color:rgba(255,255,253,.35)}
 
+  body.shot .hdr,body.shot .intro,body.shot .inter,body.shot .end{display:none}
+  body.shot .stage-wrap{height:100vh!important}
+  body.shot1 #stageWrap2{display:none}
+  body.shot2 #stageWrap{display:none}
+
   /* ---------- static (reduced-motion) mode ---------- */
   body.static .stage-wrap{display:none}
   body.static .hint{display:none}
@@ -478,6 +514,8 @@
         <div class="phone-size">
           <div class="phone" id="phone">
             <div class="shell"></div>
+            <svg class="hand" viewBox="0 0 400 240" aria-hidden="true"><path class="hfill" d="M118 240 C118 214 138 198 178 192 C230 184 300 188 336 202 C362 212 376 226 380 240 Z"/><path class="hfill" d="M330 206 C352 182 362 150 356 126 C352 108 334 104 324 118 C312 136 308 168 302 200 C310 206 320 208 330 206 Z"/><path class="hfill" d="M60 170 C48 170 42 160 46 151 C50 143 62 142 70 148 L82 158 L72 172 Z"/><path class="hfill" d="M56 200 C44 200 38 190 42 181 C46 173 58 172 66 178 L78 188 L68 202 Z"/><path class="hfill" d="M64 228 C52 230 44 222 46 212 C48 204 60 201 68 206 L80 216 L72 230 Z"/></svg>
+            <div class="pshadow"></div>
             <div class="screen">
 
               <!-- 0 · lock -->
@@ -502,7 +540,7 @@
                   <div class="apphdr-l">
                     <span class="back"><svg width="9" height="14" viewBox="0 0 9 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7.5 1.5 2 7l5.5 5.5"/></svg></span>
                     <div>
-                      <div class="apphdr-t">Job #4821 &middot; No cooling</div>
+                      <div class="apphdr-t">Job #4821</div>
                       <div class="apphdr-s">Jul 26 &middot; 9:00 AM &middot; Santa Rosa Beach, FL</div>
                     </div>
                   </div>
@@ -554,7 +592,7 @@
                   <div class="apphdr-l">
                     <span class="back"><svg width="9" height="14" viewBox="0 0 9 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7.5 1.5 2 7l5.5 5.5"/></svg></span>
                     <div>
-                      <div class="apphdr-t">Job #4821 &middot; No cooling</div>
+                      <div class="apphdr-t">Job #4821</div>
                       <div class="apphdr-s">Jul 26 &middot; 9:00 AM &middot; Santa Rosa Beach, FL</div>
                     </div>
                   </div>
@@ -608,7 +646,7 @@
                   <div class="apphdr-l">
                     <span class="back"><svg width="9" height="14" viewBox="0 0 9 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7.5 1.5 2 7l5.5 5.5"/></svg></span>
                     <div>
-                      <div class="apphdr-t">Job #4821 &middot; No cooling</div>
+                      <div class="apphdr-t">Job #4821</div>
                       <div class="apphdr-s">Jul 26 &middot; 9:00 AM &middot; Santa Rosa Beach, FL</div>
                     </div>
                   </div>
@@ -716,7 +754,7 @@
           </div>
         </div>
       </div>
-      <div class="spacer"></div>
+      <div class="annos" aria-hidden="true"><div class="anno anno0" data-anno="0"><svg viewBox="0 0 120 60"><path class="apath" d="M112 46 C80 52 40 40 10 16"/><path class="ahead" d="M22 16 L10 16 L16 28"/></svg><span>Lands with the manual preloaded</span></div><div class="anno anno1" data-anno="1"><svg viewBox="0 0 120 60"><path class="apath" d="M112 46 C80 52 40 40 10 16"/><path class="ahead" d="M22 16 L10 16 L16 28"/></svg><span>One tap &mdash; then he just works</span></div><div class="anno anno2" data-anno="2"><svg viewBox="0 0 120 60"><path class="apath" d="M112 46 C80 52 40 40 10 16"/><path class="ahead" d="M22 16 L10 16 L16 28"/></svg><span>It heard that &mdash; and flagged a lead</span></div><div class="anno anno3" data-anno="3"><svg viewBox="0 0 120 60"><path class="apath" d="M112 46 C80 52 40 40 10 16"/><path class="ahead" d="M22 16 L10 16 L16 28"/></svg><span>It knows exactly what&rsquo;s missing</span></div><div class="anno anno4" data-anno="4"><svg viewBox="0 0 120 60"><path class="apath" d="M112 46 C80 52 40 40 10 16"/><path class="ahead" d="M22 16 L10 16 L16 28"/></svg><span>It calls before the truck leaves</span></div><div class="anno anno5" data-anno="5"><svg viewBox="0 0 120 60"><path class="apath" d="M112 46 C80 52 40 40 10 16"/><path class="ahead" d="M22 16 L10 16 L16 28"/></svg><span>Serial &mdash; read straight off the photo</span></div></div>
     </div>
     <div class="hint lbl" id="hint">Scroll &mdash; the demo plays itself <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v14"/><path d="M6 12l6 6 6-6"/></svg></div>
   </div>
@@ -772,6 +810,7 @@
         <p id="cap2B"></p>
       </div>
       <div class="bwrap">
+        <div class="anno2wrap" aria-hidden="true"><div class="anno banno0" data-banno="0"><svg viewBox="0 0 120 60"><path class="apath" d="M112 8 C86 6 44 16 16 44"/><path class="ahead" d="M14 32 L16 44 L28 42"/></svg><span>The orange tile is the AI &mdash; watch it work</span></div><div class="anno banno1" data-banno="1"><svg viewBox="0 0 120 60"><path class="apath" d="M112 8 C86 6 44 16 16 44"/><path class="ahead" d="M14 32 L16 44 L28 42"/></svg><span>$1,350 back &mdash; filed like a person would</span></div><div class="anno banno2" data-banno="2"><svg viewBox="0 0 120 60"><path class="apath" d="M112 8 C86 6 44 16 16 44"/><path class="ahead" d="M14 32 L16 44 L28 42"/></svg><span>Your system of record &mdash; updated, not replaced</span></div></div>
         <div class="browser" id="browser">
           <div class="bchrome">
             <div class="btl"><i></i><i></i><i></i></div>
@@ -1060,6 +1099,11 @@
     var ar = document.getElementById("ar");
     if (!sm || !ar) return;
     sm.style.transform = "translate(" + SM_X[step] + "px,0) scale(" + SM_FACE[step] + ",1)";
+    var ph = document.getElementById("phone");
+    if (ph) {
+      ph.style.setProperty("--ry", step % 2 ? "-8deg" : "-15deg");
+      ph.style.setProperty("--rz", step % 2 ? "1.2deg" : "3deg");
+    }
     sm.classList.toggle("walk", step === 0 || step === 3);
     sm.classList.toggle("p-on", (step === 0 && beat >= 1) || step === 1 || step === 2 || step === 4 || step === 5);
     sm.classList.toggle("ring", step === 4);
@@ -1141,16 +1185,34 @@
       if (step !== lastStep || beat !== lastBeat) {
         cfg.apply(cfg.root, step, beat);
         if (cfg.onStep) cfg.onStep(step, beat);
+        if (cfg.annoAttr) {
+          var annos = document.querySelectorAll("[data-" + cfg.annoAttr + "]");
+          for (var an = 0; an < annos.length; an++) {
+            var onA = +annos[an].getAttribute("data-" + cfg.annoAttr) === step;
+            if (onA && !annos[an].classList.contains("on")) {
+              annos[an].classList.remove("on");
+              void annos[an].offsetWidth;
+              annos[an].classList.add("on");
+            } else if (!onA) {
+              annos[an].classList.remove("on");
+            }
+          }
+        }
         lastStep = step;
         lastBeat = beat;
       }
       if (cfg.onP) cfg.onP(p);
     }
     function onScroll() {
-      var rect = cfg.wrap.getBoundingClientRect();
-      var total = rect.height - window.innerHeight;
-      if (total <= 0) return;
-      var p = Math.max(0, Math.min(0.9999, -rect.top / total));
+      var p;
+      if (cfg.forceKey && window.__Q && window.__Q[cfg.forceKey] !== undefined) {
+        p = Math.max(0, Math.min(0.9999, window.__Q[cfg.forceKey]));
+      } else {
+        var rect = cfg.wrap.getBoundingClientRect();
+        var total = rect.height - window.innerHeight;
+        if (total <= 0) return;
+        p = Math.max(0, Math.min(0.9999, -rect.top / total));
+      }
       var n = cfg.steps.length;
       var step = Math.min(n - 1, Math.floor(p * n));
       var q = Math.max(0, Math.min(1, p * n - step));
@@ -1160,6 +1222,9 @@
     render(0, 0, 0);
     return onScroll;
   }
+
+  window.__Q = {};
+  location.search.replace(/[?&](\w+)=([0-9.]+)/g, function (_, k, v) { window.__Q[k] = parseFloat(v); });
 
   var hint = document.getElementById("hint");
   var s1 = makeStage({
@@ -1173,6 +1238,8 @@
     capT: document.getElementById("capT"),
     capB: document.getElementById("capB"),
     dotsEl: document.getElementById("dots"),
+    forceKey: "f1",
+    annoAttr: "anno",
     onStep: applyScene1,
     onP: function (p) { hint.classList.toggle("off", p >= 0.02); },
   });
@@ -1187,6 +1254,8 @@
     capT: document.getElementById("cap2T"),
     capB: document.getElementById("cap2B"),
     dotsEl: document.getElementById("dots2"),
+    forceKey: "f2",
+    annoAttr: "banno",
     onStep: applyScene2,
     onP: function (p) {
       var el = document.getElementById("scene2");
@@ -1198,6 +1267,11 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", onScroll, { passive: true });
   onScroll();
+
+  if (window.__Q && window.__Q.shot) {
+    document.body.classList.add("shot", "shot" + window.__Q.shot);
+    onScroll();
+  }
 })();
 
 </script>
