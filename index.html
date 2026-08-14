@@ -425,6 +425,18 @@
   body.shot1 #stageWrap2{display:none}
   body.shot2 #stageWrap{display:none}
 
+
+  /* phone view: just the device */
+  @media(max-width:767px){
+    .scene1{display:none}
+    .cap{display:none}
+    .cap2{display:none}
+    .grid{grid-template-rows:1fr;padding:6px 10px 14px;gap:0}
+    .phone-size{max-height:80svh}
+    .phone{max-width:74vw;--ry:-8deg;--rz:1.6deg;margin-right:9vw}
+    .dots{padding-top:70px}
+  }
+
   /* ---------- static (reduced-motion) mode ---------- */
   body.static .stage-wrap{display:none}
   body.static .hint{display:none}
@@ -1101,8 +1113,9 @@
     sm.style.transform = "translate(" + SM_X[step] + "px,0) scale(" + SM_FACE[step] + ",1)";
     var ph = document.getElementById("phone");
     if (ph) {
-      ph.style.setProperty("--ry", step % 2 ? "-8deg" : "-15deg");
-      ph.style.setProperty("--rz", step % 2 ? "1.2deg" : "3deg");
+      var mob = window.innerWidth < 768;
+      ph.style.setProperty("--ry", step % 2 ? (mob ? "-4deg" : "-8deg") : (mob ? "-8deg" : "-15deg"));
+      ph.style.setProperty("--rz", step % 2 ? (mob ? "0.8deg" : "1.2deg") : (mob ? "1.6deg" : "3deg"));
     }
     sm.classList.toggle("walk", step === 0 || step === 3);
     sm.classList.toggle("p-on", (step === 0 && beat >= 1) || step === 1 || step === 2 || step === 4 || step === 5);
